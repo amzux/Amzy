@@ -1,6 +1,14 @@
 # Amzy
-2nd Term Package Manager 
+**Package Manager**
+
+# USE 
  ``` 
- For getting 3rd Party updates && adding Your Own tools
- ```
+  Amzy is Use For ,Devs For instantly providing updates 
+
+
+
+
+ 
+
+
  
