@@ -1,9 +1,9 @@
 # Amzy
 **Package Manager**
 
-# USE 
- ``` 
-  Amzy is Use For ,Devs For instantly providing updates 
+Source will available at 29-6-2019
+
+
 
 
 
