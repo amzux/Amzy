@@ -1,7 +1,8 @@
 # Amzy
 **Package Manager**
 
-Source will available at 29-6-2019
+read wiki for full usage 
+
 
 
 
