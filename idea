@@ -1,0 +1,42 @@
+
+amzy.list banavani
+unistaller banavanu
+installed packages batavana
+directory /var/cache/ ma rakhvanu
+bash ma code karvo hard rese benchod 
+ne python lond kartay slow vhhr 
+C ma gand fati jase aatlu karta to
+key store karvani , amzy -key keyfile
+repo ne server ni key match na thay to package install na thay 
+#repo side pan karvu parse ne
+
+repo side aapre 3 folder banavana
+Packages, src , main
+
+ne jo repo ma security folder na hoy to nai allow karvanu
+key u banavu ej joyye biji na chale
+
+#structure
+.
+├── main
+│   └── Amzy.amzx
+├── Packages
+│   └── all.tar
+└── security
+    ├── idea
+    ├── key.amzcrypt
+    └── maintainer_info_key
+
+
+##local
+options= maintainer ,  show , clean , remove , install , update(aama aapre peli list download thay info vari), 
+
+Amzy/
+├── download
+├── installed
+│   └── idea
+├── list
+│   └── id
+└── unis
+
+
