@@ -60,7 +60,7 @@ def check_dir():
         vr = os.system("cat /Amzy/Installed/" + pkg)
         # TODO
         print(colored("LATEST:", 'blue'))
-        lv = os.system("cat /Amzy/list/" + pkg + " | grep version"), 'red'
+        lv = os.system("cat /Amzy/list/" + pkg + " | grep version")
         res = input("Do You want to install new?[Y/N]: ")
         if res == "Y":
             print("ok")
