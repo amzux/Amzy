@@ -7,31 +7,47 @@ import shutil
 import sys
 from pathlib import Path
 from termcolor import colored
-# TODO aapre colour print karvani chhe badha ni
 
 url = "https://raw.githubusercontent.com/amzux/Amzux-repo/master/"
 infopath = "/Amzy/list/"
 dwpath = "/Amzy/download/"
 unispath = "/Amzy/unis/"
 inpath = "/Amzy/Installed/"
+keypath = "/Amzy/keys/key"  # work is left
+key = '1234'  # temporary use of this, not recommended
 
+'''TODO
+multiple repo support but first password protection,
+#work
+1) pass protected file 1
+2) pass file store location  0
+3) multiple repo support 0
+4) package style change a bit 1
+5) Amzy updator 0 
+6) GUI 0    
+7) code optimization & infra changes 1  
+8) TODO aapre colour print karvani chhe badha ni 1
+'''
+
+
+# def fix_tools():
 
 def help():
     print(
-        """ 
-	--h --help	     shows this msg
-	--s --show	     show package information
-				~Amzy --s packagename	
-	--c --clean	     clean all downloaded packages,
-	--r	--remove     remove perticular package
-				~Amzy --r  packagename
-	--i	--install    download and install package 
-	--u	--update     update packageslist
-	--m	--maintainer shows my name (of course):))
-	--l	--list 		shows all installed packages
-	
-	--a	--allp		shows all packages avilible on repo
-	"""
+        " \n"
+        "	--h --help	     shows this msg\n"
+        "	--s --show	     show package information\n"
+        "				~Amzy --s packagename	\n"
+        "	--c --clean	     clean all downloaded packages,\n"
+        "	--r	--remove     remove perticular package\n"
+        "				~Amzy --r  packagename\n"
+        "	--i	--install    download and install package \n"
+        "	--u	--update     update packageslist\n"
+        "	--m	--maintainer shows my name (of course):))\n"
+        "	--l	--list 		shows all installed packages\n"
+        "	\n"
+        "	--a	--allp		shows all packages avilible on repo\n"
+        "	"
     )
 
 
@@ -57,10 +73,10 @@ def check_dir():
 
     if Path(inpath + pkg).exists():
         print(colored("You Have Already Installed " + pkg, 'blue'))
-        vr = os.system("cat /Amzy/Installed/" + pkg)
+        vr = os.system("cat " + inpath + pkg)
         # TODO
         print(colored("LATEST:", 'blue'))
-        lv = os.system("cat /Amzy/list/" + pkg + " | grep version")
+        lv = os.system("cat " + infopath + pkg + " | grep version"), 'red'
         res = input("Do You want to install new?[Y/N]: ")
         if res == "Y":
             print("ok")
@@ -78,13 +94,40 @@ def clean():
     os.mkdir(dwpath)
 
 
-#####def part over#####
+def downloader():
+    os.system("aria2c " + url + "main/" + pkg + ".Amzx")
+
+
+def extractor():
+    # gpg -d --passphrase '(cat pass.key)' $1 | tar xzvf -
+    os.system("gpg -d --passphrase " + key + " " + pkg + ".Amzx | tar xzf -")
+    os.chdir(pkg + ".Amzx")
+
+
+def installer():
+    os.system("sh install.sh")
+
+
+def remover():
+    os.chdir(unispath)
+    print(colored("uninstalling " + pkg), 'red')
+    os.system("sh " + pkg)
+
+
+def updatel():
+    print(colored("Downloading packages list", 'blue'))
+    shutil.rmtree(infopath, ignore_errors=True)
+    os.mkdir(infopath)
+    os.chdir(infopath)
+    os.system("aria2c " + url + "Packages/all.zip")
+    print("Downloaded & now extracting")
+    os.system("unzip all.zip")
+    os.system("rm -r all.zip")
 
 
 if not os.geteuid() == 0:
     sys.exit(colored('run with sudo', 'red'))
 
-########################
 argumentList = sys.argv[1:]
 options = "hscriumla:"
 long_options = ["help", "show=", "clean", "remove=", "install=", "update", "maintainer", "list", "allp"]
@@ -101,9 +144,9 @@ try:
             showf()
 
         elif currentArgument in ("--m", "--maintainer"):
-            print(colored("Dr.Amzker <amzker@protonmail.com> , [Telegram] @amzker") , 'blue'), sys.argv[0]
+            print(colored("Dr.Amzker <amzker@protonmail.com> , [Telegram] @amzker"), 'blue'), sys.argv[0]
         elif currentArgument in ("--l", "--list"):
-            os.system("ls /Amzy/Installed/"), sys.argv[0]
+            os.system("ls " + inpath), sys.argv[0]
         elif currentArgument in ("--a", "--allp"):
             os.system("ls " + infopath), sys.argv[0]
         elif currentArgument in ("--c", "--clean"):
@@ -113,30 +156,18 @@ try:
             chkpkg()
             os.chdir(dwpath)
             check_dir()
-            # downloading
-            dw = "aria2c " + url + "main/" + pkg + ".Amzx"
-            os.system(dw)
+            print(colored("Downloading", 'blue'))
+            downloader()
             check_aria2()
-            # now installing
-            os.system("tar xf " + pkg + ".Amzx")
-            os.chdir(pkg + ".Amzx")
-            os.system("sh install.sh")
+            print(colored("Extracting", 'red'))
+            extractor()
+            print(colored("Installing", 'cyan'))
+            installer()
         elif currentArgument in ("--r", "--remove"):
             pkg = "% s" % currentValue
-            os.chdir(unispath)
-            print("unistallling " + pkg)
-            os.system("sh " + pkg)
+            remover()
         elif currentArgument in ("--u", "--update"):
-            print("Downloading packages list")
-            shutil.rmtree("/Amzy/list/", ignore_errors=True)
-            os.mkdir("/Amzy/list/")
-            os.chdir("/Amzy/list/")
-            dw = "aria2c " + url + "Packages/all.zip"
-            os.system(dw)
-            print("Downloaded & now extracting")
-            os.system("unzip all.zip")
-            os.system("rm -r all.zip")
-
+            updatel()
 
 except  getopt.error as err:
     print(str(err))
